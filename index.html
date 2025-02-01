@@ -50,9 +50,8 @@
     <p>당첨 여부는 나중에 알려드리겠습니다.</p>
 </div>
 
-<!-- ✅ JavaScript 코드를 `<body>` 끝나기 직전에 추가 -->
+<!-- ✅ JavaScript 코드를 HTML 내부에 직접 추가 -->
 <script>
-    // ✅ `nextPage` 함수가 정상적으로 정의되었는지 확인
     function nextPage(currentPage, nextPage) {
         console.log(`📌 페이지 이동: ${currentPage} → ${nextPage}`);
 
@@ -72,16 +71,13 @@
         nextElement.classList.remove('hidden');
     }
 
-    // ✅ `saveResponse` 함수 수정 (버튼 클릭 시 `nextPage()` 실행 확인)
     function saveResponse(currentPage, nextPage, response) {
         console.log(`🔹 버튼 눌림: ${currentPage} → ${nextPage}, 응답: ${response}`);
 
-        // ✅ `nextPage` 함수가 실행되는지 확인
         nextPage(currentPage, nextPage);
 
-        // ✅ 서버로 데이터 전송
         const name = document.getElementById('name').value || "박예슬";
-        const scriptURL = https://script.google.com/macros/s/AKfycbxe1X7jy-cA4N_xLhLEuUOWozaI4HV6uMeOvYwVMOv-nJlluqsIF_CRiO0VIKXMasnMPQ/exec; // 
+        const scriptURL = "https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_URL/exec"; // ✅ 네가 배포한 URL로 변경해야 함!
         const url = `${scriptURL}?name=${name}&response=${response}`;
 
         fetch(url)

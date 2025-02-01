@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>졸업 응답 웹사이트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        #calendar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+        .selected {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+
+<div id="page1">
+    <h2>이름을 입력하세요</h2>
+    <input type="text" id="name" placeholder="이름을 입력하세요">
+    <button onclick="nextPage('page1', 'page2')">다음</button>
+</div>
+
+<div id="page2" class="hidden">
+    <h2>안녕하세요 선생님 저는 박예슬이에요</h2>
+    <button onclick="nextPage('page2', 'page3')">확인</button>
+</div>
+
+<div id="page3" class="hidden">
+    <h2>선생님 저 졸업하는데 아쉬우시죠ㅠㅠ</h2>
+    <button onclick="saveResponse('page3', 'page4', '예')">예</button>
+    <button onclick="saveResponse('page3', 'page4', '아니오')">아니오</button>
+</div>
+
+<div id="page4" class="hidden">
+    <h2>졸업해서 아쉬움을 선택하셨습니다.</h2>
+    <h3>2월에 밥 한 번만 사주세요!!</h3>
+    <button onclick="saveResponse('page4', 'page5', '응')">응</button>
+    <button onclick="saveResponse('page4', 'page5', '아니')">아니</button>
+</div>
+
+<div id="page5" class="hidden">
+    <h2>그래, 밥 사줄게 예슬아!!♡</h2>
+    <h3>편하신 날짜 하루만 골라주세요! 오후~저녁 기준</h3>
+    <div id="calendar"></div>
+    <input type="hidden" id="selectedDate">
+    <button onclick="submitDate()">제출</button>
+</div>
+
+<div id="page6" class="hidden">
+    <h2>식사 이벤트 추첨에 응모하셨습니다.</h2>
+    <p>당첨 여부는 나중에 알려드리겠습니다.</p>
+</div>
+
+<script>
+    const availableDates = [7, 8, 10, 11, 18, 24]; // 선택 가능한 날짜
+
+    function nextPage(currentPage, nextPage) {
+        document.getElementById(currentPage).classList.add('hidden');
+        document.getElementById(nextPage).classList.remove('hidden');
+    }
+
+    function saveResponse(currentPage, nextPage, response) {
+        const name = document.getElementById('name').value || "박예슬"; 
+        const url = `https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec?name=${name}&response=${response}`;
+
+        fetch(url).then(() => {
+            console.log("응답이 저장되었습니다.");
+            nextPage(currentPage, nextPage);
+        });
+    }
+
+    function generateCalendar() {
+        const calendarElement = document.getElementById('calendar');
+        availableDates.forEach(day => {
+            const dayDiv = document.createElement('div');
+            dayDiv.classList.add('calendar-day');
+            dayDiv.innerText = day;
+            dayDiv.onclick = () => selectDate(day, dayDiv);
+            calendarElement.appendChild(dayDiv);
+        });
+    }
+
+    function selectDate(day, element) {
+        document.querySelectorAll('.calendar-day').forEach(div => div.classList.remove('selected'));
+        element.classList.add('selected');
+        document.getElementById('selectedDate').value = day;
+    }
+
+    function submitDate() {
+        const selectedDate = document.getElementById('selectedDate').value;
+        if (!selectedDate) {
+            alert("날짜를 선택해주세요!");
+            return;
+        }
+
+        const url = `https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec?name=박예슬&date=${selectedDate}`;
+        fetch(url).then(() => {
+            console.log("날짜가 저장되었습니다.");
+            nextPage('page5', 'page6');
+        });
+    }
+
+    window.onload = generateCalendar;
+</script>
+
+</body>
+</html>

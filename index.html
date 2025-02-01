@@ -12,6 +12,29 @@
         .hidden {
             display: none;
         }
+        #calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+        .selected {
+            background-color: lightblue;
+        }
     </style>
 </head>
 <body>
@@ -23,20 +46,20 @@
     <button id="next1">다음</button>
 </div>
 
-<!-- 페이지 2: 인사 -->
+<!-- 페이지 2 -->
 <div id="page2" class="hidden">
     <h2>안녕하세요 선생님 저는 박예슬이에요</h2>
     <button id="next2">확인</button>
 </div>
 
-<!-- 페이지 3: 졸업 질문 -->
+<!-- 페이지 3 -->
 <div id="page3" class="hidden">
     <h2>선생님 저 졸업하는데 아쉬우시죠ㅠㅠ</h2>
     <button id="yes">예</button>
     <button id="no">아니오</button>
 </div>
 
-<!-- 페이지 4: 밥 사달라고 요청 -->
+<!-- 페이지 4 -->
 <div id="page4" class="hidden">
     <h2>졸업해서 아쉬움을 선택하셨습니다.</h2>
     <h3>2월에 밥 한 번만 사주세요!!</h3>
@@ -44,13 +67,21 @@
     <button id="disagree">아니</button>
 </div>
 
-<!-- 페이지 5: 응모 완료 -->
+<!-- 페이지 5: 캘린더 선택 -->
 <div id="page5" class="hidden">
+    <h2>그래, 밥 사줄게 예슬아!!♡</h2>
+    <h3>편하신 날짜 하루만 골라주세요! 오후~저녁 기준</h3>
+    <div id="calendar"></div>
+    <input type="hidden" id="selectedDate">
+    <button id="submitDate">제출</button>
+</div>
+
+<!-- 페이지 6 -->
+<div id="page6" class="hidden">
     <h2>식사 이벤트 추첨에 응모하셨습니다.</h2>
     <p>당첨 여부는 나중에 알려드리겠습니다.</p>
 </div>
 
-<!-- ✅ JavaScript 코드 -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         console.log("✅ JavaScript 로드 완료!");
@@ -58,20 +89,8 @@
         function nextPage(currentId, nextId) {
             console.log(`📌 페이지 이동: ${currentId} → ${nextId}`);
 
-            const currentElement = document.getElementById(currentId);
-            const nextElement = document.getElementById(nextId);
-
-            if (!currentElement) {
-                console.error(`🚨 오류: 현재 페이지 '${currentId}'를 찾을 수 없음`);
-                return;
-            }
-            if (!nextElement) {
-                console.error(`🚨 오류: 다음 페이지 '${nextId}'를 찾을 수 없음`);
-                return;
-            }
-
-            currentElement.classList.add('hidden');
-            nextElement.classList.remove('hidden');
+            document.getElementById(currentId).classList.add('hidden');
+            document.getElementById(nextId).classList.remove('hidden');
         }
 
         function saveResponse(currentId, nextId, response) {
@@ -80,7 +99,7 @@
             nextPage(currentId, nextId);
 
             const name = document.getElementById('name').value || "박예슬";
-            const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec"; // ✅ 여기에 네 Google Apps Script URL 입력
+            const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec";
             const url = `${scriptURL}?name=${name}&response=${response}`;
 
             fetch(url)
@@ -89,30 +108,48 @@
                 .catch(error => console.error("❌ 에러 발생:", error));
         }
 
-        // ✅ 버튼 이벤트 리스너 추가 (각 버튼 클릭 시 작동)
-        document.getElementById("next1").addEventListener("click", function() {
-            nextPage("page1", "page2");
+        // 캘린더 생성
+        const availableDates = [7, 8, 10, 11, 18, 24];
+        function generateCalendar() {
+            const calendarElement = document.getElementById('calendar');
+            let dayCounter = 2;  // 2월 2일부터 시작
+            for (let i = 0; i < 28; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('calendar-day');
+                dayDiv.innerText = dayCounter;
+                if (!availableDates.includes(dayCounter)) {
+                    dayDiv.classList.add('disabled');
+                } else {
+                    dayDiv.onclick = () => selectDate(dayCounter, dayDiv);
+                }
+                calendarElement.appendChild(dayDiv);
+                dayCounter++;
+            }
+        }
+
+        function selectDate(day, element) {
+            document.querySelectorAll('.calendar-day').forEach(div => div.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('selectedDate').value = day;
+        }
+
+        document.getElementById("submitDate").addEventListener("click", function() {
+            const selectedDate = document.getElementById('selectedDate').value;
+            if (!selectedDate) {
+                alert("날짜를 선택해주세요!");
+                return;
+            }
+            saveResponse("page5", "page6", selectedDate);
         });
 
-        document.getElementById("next2").addEventListener("click", function() {
-            nextPage("page2", "page3");
-        });
+        document.getElementById("next1").addEventListener("click", function() { nextPage("page1", "page2"); });
+        document.getElementById("next2").addEventListener("click", function() { nextPage("page2", "page3"); });
+        document.getElementById("yes").addEventListener("click", function() { saveResponse("page3", "page4", "예"); });
+        document.getElementById("no").addEventListener("click", function() { saveResponse("page3", "page4", "아니오"); });
+        document.getElementById("agree").addEventListener("click", function() { saveResponse("page4", "page5", "응"); });
+        document.getElementById("disagree").addEventListener("click", function() { saveResponse("page4", "page5", "아니"); });
 
-        document.getElementById("yes").addEventListener("click", function() {
-            saveResponse("page3", "page4", "예");
-        });
-
-        document.getElementById("no").addEventListener("click", function() {
-            saveResponse("page3", "page4", "아니오");
-        });
-
-        document.getElementById("agree").addEventListener("click", function() {
-            saveResponse("page4", "page5", "응");
-        });
-
-        document.getElementById("disagree").addEventListener("click", function() {
-            saveResponse("page4", "page5", "아니");
-        });
+        generateCalendar();
     });
 </script>
 

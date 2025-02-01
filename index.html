@@ -51,7 +51,8 @@
 </div>
 
 <script>
-    function nextPage(currentPage, nextPage) {
+    // ✅ `nextPage` 함수를 글로벌 함수로 설정
+    window.nextPage = function(currentPage, nextPage) {
         console.log(`📌 페이지 이동: ${currentPage} → ${nextPage}`);
 
         const currentElement = document.getElementById(currentPage);
@@ -68,17 +69,19 @@
 
         currentElement.classList.add('hidden');
         nextElement.classList.remove('hidden');
-    }
+    };
 
-    function saveResponse(currentPage, nextPage, response) {
+    // ✅ `saveResponse` 함수에서도 `nextPage()`를 정상적으로 호출 가능하도록 수정
+    window.saveResponse = function(currentPage, nextPage, response) {
         console.log(`🔹 버튼 눌림: ${currentPage} → ${nextPage}, 응답: ${response}`);
 
-        // 🚨 여기에 디버깅 코드 추가 (콘솔에서 로그 확인)
-        console.log("✅ nextPage 함수 실행 직전");
+        // ✅ nextPage() 실행 전 확인
+        if (typeof nextPage !== "function") {
+            console.error("🚨 오류: nextPage 함수가 정의되지 않음!");
+            return;
+        }
 
-        nextPage(currentPage, nextPage);
-
-        console.log("✅ nextPage 함수 실행 완료");
+        window.nextPage(currentPage, nextPage);
 
         const name = document.getElementById('name').value || "박예슬";
         const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec"; // ✅ 네가 배포한 URL로 변경해야 함!
@@ -86,13 +89,9 @@
 
         fetch(url)
             .then(response => response.text())
-            .then(data => {
-                console.log("✅ 응답 저장 완료:", data);
-            })
-            .catch(error => {
-                console.error("❌ 에러 발생:", error);
-            });
-    }
+            .then(data => console.log("✅ 응답 저장 완료:", data))
+            .catch(error => console.error("❌ 에러 발생:", error));
+    };
 </script>
 
 </body>

@@ -20,28 +20,28 @@
 <div id="page1">
     <h2>이름을 입력하세요</h2>
     <input type="text" id="name" placeholder="이름을 입력하세요">
-    <button onclick="nextPage('page1', 'page2')">다음</button>
+    <button id="next1">다음</button>
 </div>
 
 <!-- 페이지 2: 인사 -->
 <div id="page2" class="hidden">
     <h2>안녕하세요 선생님 저는 박예슬이에요</h2>
-    <button onclick="nextPage('page2', 'page3')">확인</button>
+    <button id="next2">확인</button>
 </div>
 
 <!-- 페이지 3: 졸업 질문 -->
 <div id="page3" class="hidden">
     <h2>선생님 저 졸업하는데 아쉬우시죠ㅠㅠ</h2>
-    <button onclick="saveResponse('page3', 'page4', '예')">예</button>
-    <button onclick="saveResponse('page3', 'page4', '아니오')">아니오</button>
+    <button id="yes">예</button>
+    <button id="no">아니오</button>
 </div>
 
 <!-- 페이지 4: 밥 사달라고 요청 -->
 <div id="page4" class="hidden">
     <h2>졸업해서 아쉬움을 선택하셨습니다.</h2>
     <h3>2월에 밥 한 번만 사주세요!!</h3>
-    <button onclick="saveResponse('page4', 'page5', '응')">응</button>
-    <button onclick="saveResponse('page4', 'page5', '아니')">아니</button>
+    <button id="agree">응</button>
+    <button id="disagree">아니</button>
 </div>
 
 <!-- 페이지 5: 응모 완료 -->
@@ -52,51 +52,68 @@
 
 <!-- ✅ JavaScript 코드 -->
 <script>
-    window.onload = function() {
+    document.addEventListener("DOMContentLoaded", function() {
         console.log("✅ JavaScript 로드 완료!");
 
-        // ✅ `window` 객체에 전역 함수 등록
-        window.nextPage = function(currentPage, nextPage) {
-            console.log(`📌 페이지 이동: ${currentPage} → ${nextPage}`);
+        function nextPage(currentId, nextId) {
+            console.log(`📌 페이지 이동: ${currentId} → ${nextId}`);
 
-            const currentElement = document.getElementById(currentPage);
-            const nextElement = document.getElementById(nextPage);
+            const currentElement = document.getElementById(currentId);
+            const nextElement = document.getElementById(nextId);
 
             if (!currentElement) {
-                console.error(`🚨 오류: 현재 페이지 '${currentPage}'를 찾을 수 없음`);
+                console.error(`🚨 오류: 현재 페이지 '${currentId}'를 찾을 수 없음`);
                 return;
             }
             if (!nextElement) {
-                console.error(`🚨 오류: 다음 페이지 '${nextPage}'를 찾을 수 없음`);
+                console.error(`🚨 오류: 다음 페이지 '${nextId}'를 찾을 수 없음`);
                 return;
             }
 
             currentElement.classList.add('hidden');
             nextElement.classList.remove('hidden');
-        };
+        }
 
-        // ✅ `saveResponse()`도 `window` 객체에 등록
-        window.saveResponse = function(currentPage, nextPage, response) {
-            console.log(`🔹 버튼 눌림: ${currentPage} → ${nextPage}, 응답: ${response}`);
+        function saveResponse(currentId, nextId, response) {
+            console.log(`🔹 버튼 눌림: ${currentId} → ${nextId}, 응답: ${response}`);
 
-            // ✅ `nextPage()`가 함수인지 확인 후 실행
-            if (typeof window.nextPage !== "function") {
-                console.error("🚨 오류: nextPage 함수가 정의되지 않음!");
-                return;
-            }
-
-            window.nextPage(currentPage, nextPage);
+            nextPage(currentId, nextId);
 
             const name = document.getElementById('name').value || "박예슬";
-            const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec"; // ✅ 네가 배포한 URL로 변경해야 함!
+            const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec"; // ✅ 여기에 네 Google Apps Script URL 입력
             const url = `${scriptURL}?name=${name}&response=${response}`;
 
             fetch(url)
                 .then(response => response.text())
                 .then(data => console.log("✅ 응답 저장 완료:", data))
                 .catch(error => console.error("❌ 에러 발생:", error));
-        };
-    };
+        }
+
+        // ✅ 버튼 이벤트 리스너 추가 (각 버튼 클릭 시 작동)
+        document.getElementById("next1").addEventListener("click", function() {
+            nextPage("page1", "page2");
+        });
+
+        document.getElementById("next2").addEventListener("click", function() {
+            nextPage("page2", "page3");
+        });
+
+        document.getElementById("yes").addEventListener("click", function() {
+            saveResponse("page3", "page4", "예");
+        });
+
+        document.getElementById("no").addEventListener("click", function() {
+            saveResponse("page3", "page4", "아니오");
+        });
+
+        document.getElementById("agree").addEventListener("click", function() {
+            saveResponse("page4", "page5", "응");
+        });
+
+        document.getElementById("disagree").addEventListener("click", function() {
+            saveResponse("page4", "page5", "아니");
+        });
+    });
 </script>
 
 </body>

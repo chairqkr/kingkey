@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -65,7 +66,7 @@
 
 <!-- 페이지 5: 날짜 선택 -->
 <div id="page5" class="hidden">
-    <h2>그래, 밥 사줄게 예슬아!!♡</h2>
+    <h2>그래, 밥 사줄게 예슬아!!♡를 선택하셨습니다</h2>
     <h3>편하신 날짜 하루만 골라주세요! 오후~저녁 기준</h3>
     <div id="calendar"></div>
     <input type="hidden" id="selectedDate">
@@ -80,8 +81,7 @@
 
 <script>
     const availableDates = [7, 8, 10, 11, 18, 24]; // 선택 가능한 날짜
-    const scriptURL = "https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_URL/exec"; // ✅ 여기를 네가 배포한 URL로 변경해야 함!
-
+    const scriptURL = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec/exec"; //
     function nextPage(currentPage, nextPage) {
         document.getElementById(currentPage).classList.add('hidden');
         document.getElementById(nextPage).classList.remove('hidden');
@@ -91,7 +91,7 @@
         const name = document.getElementById('name').value || "박예슬";
         const url = `${scriptURL}?name=${name}&response=${response}`;
 
-        // ✅ fetch 요청과 상관없이 먼저 페이지를 이동시킴
+        // 
         nextPage(currentPage, nextPage);
 
         fetch(url)
@@ -138,3 +138,4 @@
 
 </body>
 </html>
+

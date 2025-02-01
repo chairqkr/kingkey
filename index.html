@@ -28,10 +28,6 @@
             align-items: center;
             cursor: pointer;
         }
-        .disabled {
-            background-color: #ddd;
-            cursor: not-allowed;
-        }
         .selected {
             background-color: lightblue;
         }
@@ -39,23 +35,27 @@
 </head>
 <body>
 
+<!-- 페이지 1: 이름 입력 -->
 <div id="page1">
     <h2>이름을 입력하세요</h2>
     <input type="text" id="name" placeholder="이름을 입력하세요">
     <button onclick="nextPage('page1', 'page2')">다음</button>
 </div>
 
+<!-- 페이지 2: 인사 -->
 <div id="page2" class="hidden">
     <h2>안녕하세요 선생님 저는 박예슬이에요</h2>
     <button onclick="nextPage('page2', 'page3')">확인</button>
 </div>
 
+<!-- 페이지 3: 졸업 질문 -->
 <div id="page3" class="hidden">
     <h2>선생님 저 졸업하는데 아쉬우시죠ㅠㅠ</h2>
     <button onclick="saveResponse('page3', 'page4', '예')">예</button>
     <button onclick="saveResponse('page3', 'page4', '아니오')">아니오</button>
 </div>
 
+<!-- 페이지 4: 밥 사달라고 요청 -->
 <div id="page4" class="hidden">
     <h2>졸업해서 아쉬움을 선택하셨습니다.</h2>
     <h3>2월에 밥 한 번만 사주세요!!</h3>
@@ -63,14 +63,16 @@
     <button onclick="saveResponse('page4', 'page5', '아니')">아니</button>
 </div>
 
+<!-- 페이지 5: 날짜 선택 -->
 <div id="page5" class="hidden">
-    <h2>그래, 밥 사줄게 예슬아!!♡를 선택하셨습니다</h2>
+    <h2>그래, 밥 사줄게 예슬아!!♡</h2>
     <h3>편하신 날짜 하루만 골라주세요! 오후~저녁 기준</h3>
     <div id="calendar"></div>
     <input type="hidden" id="selectedDate">
     <button onclick="submitDate()">제출</button>
 </div>
 
+<!-- 페이지 6: 응모 완료 -->
 <div id="page6" class="hidden">
     <h2>식사 이벤트 추첨에 응모하셨습니다.</h2>
     <p>당첨 여부는 나중에 알려드리겠습니다.</p>
@@ -85,16 +87,19 @@
     }
 
     function saveResponse(currentPage, nextPage, response) {
-        const name = document.getElementById('name').value || "박예슬";  // 이름 기본값 설정
+        const name = document.getElementById('name').value || "박예슬"; // 기본 이름 설정
         const url = `https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec?name=${name}&response1=${response}&response2=${response}&date=`;
 
         fetch(url)
-            .then(response => {
-                console.log("응답이 저장되었습니다.");
-                nextPage(currentPage, nextPage);
+            .then(response => response.text()) // 응답을 텍스트로 받아서 로그 확인
+            .then(data => {
+                console.log("응답이 저장되었습니다.", data);
             })
             .catch(error => {
                 console.error("에러 발생:", error);
+            })
+            .finally(() => {
+                nextPage(currentPage, nextPage); // ⭐ 요청 실패해도 페이지 이동!
             });
     }
 
@@ -124,12 +129,15 @@
 
         const url = `https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec?name=박예슬&date=${selectedDate}`;
         fetch(url)
-            .then(() => {
-                console.log("날짜가 저장되었습니다.");
-                nextPage('page5', 'page6');
+            .then(response => response.text()) // 응답을 텍스트로 받아서 로그 확인
+            .then(data => {
+                console.log("날짜가 저장되었습니다.", data);
             })
             .catch(error => {
                 console.error("에러 발생:", error);
+            })
+            .finally(() => {
+                nextPage('page5', 'page6'); // ⭐ 요청 실패해도 페이지 이동!
             });
     }
 

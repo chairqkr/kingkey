@@ -94,6 +94,7 @@
 
             // 🚨 page5 (캘린더 화면)으로 이동할 때 캘린더 생성
             if (nextId === "page5") {
+                console.log("✅ 캘린더 생성 시작");
                 generateCalendar();
             }
         }
@@ -136,6 +137,8 @@
                 calendarElement.appendChild(dayDiv);
                 dayCounter++;
             }
+
+            console.log("✅ 캘린더 생성 완료");
         }
 
         function selectDate(day, element) {

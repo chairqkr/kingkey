@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -66,7 +65,7 @@
 
 <!-- 페이지 5: 날짜 선택 -->
 <div id="page5" class="hidden">
-    <h2>그래, 밥 사줄게 예슬아!!♡를 선택하셨습니다</h2>
+    <h2>그래, 밥 사줄게 예슬아!!♡</h2>
     <h3>편하신 날짜 하루만 골라주세요! 오후~저녁 기준</h3>
     <div id="calendar"></div>
     <input type="hidden" id="selectedDate">
@@ -81,23 +80,25 @@
 
 <script>
     const availableDates = [7, 8, 10, 11, 18, 24]; // 선택 가능한 날짜
-    const scriptURL = "https://script.google.com/macros/s/AKfycbz3nhsHzuxMAEps_P-zzXfvhFUvmSTxG20R90Y_6Iv3u-JkfWC-7eNdUd9FMlx6CnwBww/exec"; //
+    const scriptURL = "https://script.google.com/macros/s/AKfycbz3nhsHzuxMAEps_P-zzXfvhFUvmSTxG20R90Y_6Iv3u-JkfWC-7eNdUd9FMlx6CnwBww/exec"; // 
+
     function nextPage(currentPage, nextPage) {
+        console.log(`📌 페이지 이동: ${currentPage} → ${nextPage}`);
         document.getElementById(currentPage).classList.add('hidden');
         document.getElementById(nextPage).classList.remove('hidden');
     }
 
     function saveResponse(currentPage, nextPage, response) {
+        console.log(`🔹 버튼 눌림: ${currentPage} → ${nextPage}, 응답: ${response}`);
+        nextPage(currentPage, nextPage);
+
         const name = document.getElementById('name').value || "박예슬";
         const url = `${scriptURL}?name=${name}&response=${response}`;
 
-        // 
-        nextPage(currentPage, nextPage);
-
         fetch(url)
             .then(response => response.text())
-            .then(data => console.log("응답이 저장되었습니다.", data))
-            .catch(error => console.error("에러 발생:", error));
+            .then(data => console.log("✅ 응답 저장 완료:", data))
+            .catch(error => console.error("❌ 에러 발생:", error));
     }
 
     function generateCalendar() {
@@ -124,13 +125,13 @@
             return;
         }
 
-        const url = `${scriptURL}?name=박예슬&date=${selectedDate}`;
         nextPage('page5', 'page6');
 
+        const url = `${scriptURL}?name=박예슬&date=${selectedDate}`;
         fetch(url)
             .then(response => response.text())
-            .then(data => console.log("날짜가 저장되었습니다.", data))
-            .catch(error => console.error("에러 발생:", error));
+            .then(data => console.log("✅ 날짜 저장 완료:", data))
+            .catch(error => console.error("❌ 에러 발생:", error));
     }
 
     window.onload = generateCalendar;
@@ -138,4 +139,3 @@
 
 </body>
 </html>
-

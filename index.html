@@ -1,57 +1,5 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>졸업 응답 웹사이트</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-
-<!-- 페이지 1: 이름 입력 -->
-<div id="page1">
-    <h2>이름을 입력하세요</h2>
-    <input type="text" id="name" placeholder="이름을 입력하세요">
-    <button onclick="nextPage('page1', 'page2')">다음</button>
-</div>
-
-<!-- 페이지 2: 인사 -->
-<div id="page2" class="hidden">
-    <h2>안녕하세요 선생님 저는 박예슬이에요</h2>
-    <button onclick="nextPage('page2', 'page3')">확인</button>
-</div>
-
-<!-- 페이지 3: 졸업 질문 -->
-<div id="page3" class="hidden">
-    <h2>선생님 저 졸업하는데 아쉬우시죠ㅠㅠ</h2>
-    <button onclick="saveResponse('page3', 'page4', '예')">예</button>
-    <button onclick="saveResponse('page3', 'page4', '아니오')">아니오</button>
-</div>
-
-<!-- 페이지 4: 밥 사달라고 요청 -->
-<div id="page4" class="hidden">
-    <h2>졸업해서 아쉬움을 선택하셨습니다.</h2>
-    <h3>2월에 밥 한 번만 사주세요!!</h3>
-    <button onclick="saveResponse('page4', 'page5', '응')">응</button>
-    <button onclick="saveResponse('page4', 'page5', '아니')">아니</button>
-</div>
-
-<!-- 페이지 5: 응모 완료 -->
-<div id="page5" class="hidden">
-    <h2>식사 이벤트 추첨에 응모하셨습니다.</h2>
-    <p>당첨 여부는 나중에 알려드리겠습니다.</p>
-</div>
-
 <script>
-    // ✅ `nextPage` 함수를 글로벌 함수로 설정
+    // ✅ `window` 객체에 직접 바인딩해서 전역 함수로 설정
     window.nextPage = function(currentPage, nextPage) {
         console.log(`📌 페이지 이동: ${currentPage} → ${nextPage}`);
 
@@ -71,12 +19,12 @@
         nextElement.classList.remove('hidden');
     };
 
-    // ✅ `saveResponse` 함수에서도 `nextPage()`를 정상적으로 호출 가능하도록 수정
+    // ✅ `saveResponse()`도 `window` 객체에 등록
     window.saveResponse = function(currentPage, nextPage, response) {
         console.log(`🔹 버튼 눌림: ${currentPage} → ${nextPage}, 응답: ${response}`);
 
-        // ✅ nextPage() 실행 전 확인
-        if (typeof nextPage !== "function") {
+        // ✅ `nextPage()`가 함수인지 확인 후 실행
+        if (typeof window.nextPage !== "function") {
             console.error("🚨 오류: nextPage 함수가 정의되지 않음!");
             return;
         }
@@ -93,6 +41,3 @@
             .catch(error => console.error("❌ 에러 발생:", error));
     };
 </script>
-
-</body>
-</html>

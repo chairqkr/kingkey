@@ -92,34 +92,37 @@
             document.getElementById(currentId).classList.add('hidden');
             document.getElementById(nextId).classList.remove('hidden');
 
-            // 🚨 page5 (캘린더 화면)으로 이동할 때 캘린더 생성
             if (nextId === "page5") {
                 console.log("✅ 캘린더 생성 시작");
-                generateCalendar();
+                setTimeout(generateCalendar, 500);
             }
         }
 
         function saveResponse(currentId, nextId, response) {
             console.log(`🔹 버튼 눌림: ${currentId} → ${nextId}, 응답: ${response}`);
 
+            // 🚨 `page5`로 넘어가도록 먼저 설정
             nextPage(currentId, nextId);
 
             const name = document.getElementById('name').value || "박예슬";
-            const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec";
+            const scriptURL = "https://script.google.com/macros/s/AKfycbx3vlL2QLAUAboq5JpMSPu1OkFxotqzuzgQqG_Wv_DpSIKhQUHEd6jnQJffAlZpzD-b3A/exec";
             const url = `${scriptURL}?name=${name}&response=${response}`;
 
             fetch(url)
                 .then(response => response.text())
-                .then(data => console.log("✅ 응답 저장 완료:", data))
-                .catch(error => console.error("❌ 에러 발생:", error));
+                .then(data => {
+                    console.log("✅ 응답 저장 완료:", data);
+                })
+                .catch(error => {
+                    console.error("❌ 에러 발생:", error);
+                });
         }
 
-        // ✅ 캘린더 생성 함수
         function generateCalendar() {
             const calendarElement = document.getElementById('calendar');
-            calendarElement.innerHTML = ''; // 기존 내용 지우기
+            calendarElement.innerHTML = '';
             const availableDates = [7, 8, 10, 11, 18, 24];
-            let dayCounter = 2; // 2월 2일부터 시작
+            let dayCounter = 2;
 
             for (let i = 0; i < 28; i++) {
                 const dayDiv = document.createElement('div');

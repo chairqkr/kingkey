@@ -64,7 +64,7 @@
 </div>
 
 <div id="page5" class="hidden">
-    <h2>그래, 밥 사줄게 예슬아!!♡</h2>
+    <h2>그래, 밥 사줄게 예슬아!!♡를 선택하셨습니다</h2>
     <h3>편하신 날짜 하루만 골라주세요! 오후~저녁 기준</h3>
     <div id="calendar"></div>
     <input type="hidden" id="selectedDate">
@@ -85,13 +85,17 @@
     }
 
     function saveResponse(currentPage, nextPage, response) {
-        const name = document.getElementById('name').value || "박예슬"; 
-        const url = `https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec?name=${name}&response=${response}`;
+        const name = document.getElementById('name').value || "박예슬";  // 이름 기본값 설정
+        const url = `https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec?name=${name}&response1=${response}&response2=${response}&date=`;
 
-        fetch(url).then(() => {
-            console.log("응답이 저장되었습니다.");
-            nextPage(currentPage, nextPage);
-        });
+        fetch(url)
+            .then(response => {
+                console.log("응답이 저장되었습니다.");
+                nextPage(currentPage, nextPage);
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+            });
     }
 
     function generateCalendar() {
@@ -119,10 +123,14 @@
         }
 
         const url = `https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec?name=박예슬&date=${selectedDate}`;
-        fetch(url).then(() => {
-            console.log("날짜가 저장되었습니다.");
-            nextPage('page5', 'page6');
-        });
+        fetch(url)
+            .then(() => {
+                console.log("날짜가 저장되었습니다.");
+                nextPage('page5', 'page6');
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+            });
     }
 
     window.onload = generateCalendar;

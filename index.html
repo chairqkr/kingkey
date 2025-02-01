@@ -39,7 +39,7 @@
 </head>
 <body>
 
-<!-- 페이지 1: 이름 입력 -->
+<!-- 페이지 1 -->
 <div id="page1">
     <h2>이름을 입력하세요</h2>
     <input type="text" id="name" placeholder="이름을 입력하세요">
@@ -91,6 +91,11 @@
 
             document.getElementById(currentId).classList.add('hidden');
             document.getElementById(nextId).classList.remove('hidden');
+
+            // 🚨 page5 (캘린더 화면)으로 이동할 때 캘린더 생성
+            if (nextId === "page5") {
+                generateCalendar();
+            }
         }
 
         function saveResponse(currentId, nextId, response) {
@@ -108,20 +113,26 @@
                 .catch(error => console.error("❌ 에러 발생:", error));
         }
 
-        // 캘린더 생성
-        const availableDates = [7, 8, 10, 11, 18, 24];
+        // ✅ 캘린더 생성 함수
         function generateCalendar() {
             const calendarElement = document.getElementById('calendar');
-            let dayCounter = 2;  // 2월 2일부터 시작
+            calendarElement.innerHTML = ''; // 기존 내용 지우기
+            const availableDates = [7, 8, 10, 11, 18, 24];
+            let dayCounter = 2; // 2월 2일부터 시작
+
             for (let i = 0; i < 28; i++) {
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('calendar-day');
                 dayDiv.innerText = dayCounter;
+
                 if (!availableDates.includes(dayCounter)) {
                     dayDiv.classList.add('disabled');
                 } else {
-                    dayDiv.onclick = () => selectDate(dayCounter, dayDiv);
+                    dayDiv.onclick = function() {
+                        selectDate(dayCounter, dayDiv);
+                    };
                 }
+
                 calendarElement.appendChild(dayDiv);
                 dayCounter++;
             }
@@ -148,8 +159,6 @@
         document.getElementById("no").addEventListener("click", function() { saveResponse("page3", "page4", "아니오"); });
         document.getElementById("agree").addEventListener("click", function() { saveResponse("page4", "page5", "응"); });
         document.getElementById("disagree").addEventListener("click", function() { saveResponse("page4", "page5", "아니"); });
-
-        generateCalendar();
     });
 </script>
 

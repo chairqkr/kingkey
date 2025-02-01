@@ -16,3 +16,4 @@ function doGet(e) {
     // 성공 응답
     return ContentService.createTextOutput("Success");
 }
+

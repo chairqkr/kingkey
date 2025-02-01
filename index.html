@@ -50,7 +50,6 @@
     <p>당첨 여부는 나중에 알려드리겠습니다.</p>
 </div>
 
-<!-- ✅ JavaScript 코드를 HTML 내부에 직접 추가 -->
 <script>
     function nextPage(currentPage, nextPage) {
         console.log(`📌 페이지 이동: ${currentPage} → ${nextPage}`);
@@ -74,14 +73,25 @@
     function saveResponse(currentPage, nextPage, response) {
         console.log(`🔹 버튼 눌림: ${currentPage} → ${nextPage}, 응답: ${response}`);
 
+        // 🚨 여기에 디버깅 코드 추가 (콘솔에서 로그 확인)
+        console.log("✅ nextPage 함수 실행 직전");
+
         nextPage(currentPage, nextPage);
 
+        console.log("✅ nextPage 함수 실행 완료");
+
         const name = document.getElementById('name').value || "박예슬";
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec"; // 
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec"; // ✅ 네가 배포한 URL로 변경해야 함!
+        const url = `${scriptURL}?name=${name}&response=${response}`;
+
         fetch(url)
             .then(response => response.text())
-            .then(data => console.log("✅ 응답 저장 완료:", data))
-            .catch(error => console.error("❌ 에러 발생:", error));
+            .then(data => {
+                console.log("✅ 응답 저장 완료:", data);
+            })
+            .catch(error => {
+                console.error("❌ 에러 발생:", error);
+            });
     }
 </script>
 

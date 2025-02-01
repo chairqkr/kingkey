@@ -77,9 +77,7 @@
         nextPage(currentPage, nextPage);
 
         const name = document.getElementById('name').value || "박예슬";
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec"; // ✅ 네가 배포한 URL로 변경해야 함!
-        const url = `${scriptURL}?name=${name}&response=${response}`;
-
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzKxHydIWNYwr62SCH4NHe2ORP2U6YLLuwIPGRkQ6rg-_4necNe0Z7LXqrtv5T9zsP7IQ/exec"; // 
         fetch(url)
             .then(response => response.text())
             .then(data => console.log("✅ 응답 저장 완료:", data))

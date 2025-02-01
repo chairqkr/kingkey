@@ -101,7 +101,6 @@
         function saveResponse(currentId, nextId, response) {
             console.log(`🔹 버튼 눌림: ${currentId} → ${nextId}, 응답: ${response}`);
 
-            // 🚨 `page5`로 넘어가도록 먼저 설정
             nextPage(currentId, nextId);
 
             const name = document.getElementById('name').value || "박예슬";
@@ -163,8 +162,18 @@
         document.getElementById("next2").addEventListener("click", function() { nextPage("page2", "page3"); });
         document.getElementById("yes").addEventListener("click", function() { saveResponse("page3", "page4", "예"); });
         document.getElementById("no").addEventListener("click", function() { saveResponse("page3", "page4", "아니오"); });
-        document.getElementById("agree").addEventListener("click", function() { saveResponse("page4", "page5", "응"); });
-        document.getElementById("disagree").addEventListener("click", function() { saveResponse("page4", "page5", "아니"); });
+
+        // 🚨 `page4 → page5` 전환 버튼 이벤트 강제 적용
+        document.getElementById("agree").addEventListener("click", function() { 
+            console.log("✅ '응' 버튼 눌림 → page5로 이동");
+            nextPage("page4", "page5");
+        });
+        
+        document.getElementById("disagree").addEventListener("click", function() { 
+            console.log("✅ '아니' 버튼 눌림 → page5로 이동");
+            nextPage("page4", "page5");
+        });
+
     });
 </script>
 

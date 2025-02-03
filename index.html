@@ -87,13 +87,8 @@
     }
 
     function sendSelectedDate() {
-      const selectedDate = document.getElementById('selectedDate').value;
-      if (!selectedDate) {
-        alert("날짜를 선택해주세요!");
-        return;
-      }
-
-      const scriptURL = "https://script.google.com/macros/s/AKfycbwQNnaCqgrCE-EcJD0aXHFyIoWlVauND7EQt4Wh19oE3kQtqT9g0TTactHTQGX8P6_A/exec";
+      const selectedDate = document.getElementById('selectedDate').value || "날짜 없음";
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzBNsfTqBp9HBaZC0KXZvRKkfJQbor2lSJv4J2DY90ZnzvnxFRJhAKXlWL6Ebn52EFOQA/exec";
       const url = `${scriptURL}?selectedDate=${encodeURIComponent(selectedDate)}`;
 
       console.log("전송할 URL: ", url); // URL 확인

@@ -1,34 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>졸업 응답 웹사이트</title>
+  <style>
+    /* 스타일링 생략 */
+  </style>
+</head>
+<body>
+
+<!-- 페이지 1: 이름 입력 -->
+<div id="page1">
+  <h2>이름을 입력하세요</h2>
+  <input type="text" id="name" placeholder="이름을 입력하세요">
+  <button id="next1">다음</button>
+</div>
+
+<!-- 페이지 2: 인삿말 -->
+<div id="page2" class="hidden">
+  <h2>안녕하세요 선생님 저는 박예슬이에요</h2>
+  <button id="next2">확인</button>
+</div>
+
+<!-- 페이지 3: 예/아니오 질문 -->
+<div id="page3" class="hidden">
+  <h2>선생님, 저 졸업하는데 아쉬우시죠? ㅠㅠ</h2>
+  <button id="yes">예</button>
+  <button id="no">아니오</button>
+</div>
+
+<!-- 페이지 4: 추가 메시지 -->
+<div id="page4" class="hidden">
+  <h2>졸업해서 아쉬움을 선택하셨습니다.</h2>
+  <h3>2월에 밥 한 번만 사주세요!!</h3>
+  <button id="agree">응</button>
+  <button id="disagree">아니</button>
+</div>
+
+<!-- 페이지 5: 캘린더 선택 (날짜 선택) -->
+<div id="page5" class="hidden">
+  <h2>그래, 밥 사줄게 예슬아!!♡를 선택하셨습니다</h2>
+  <h3>편하신 날짜 하루만 골라주세요! (오후~저녁 기준)</h3>
+  <div id="calendar"></div>
+  <input type="hidden" id="selectedDate">
+  <button id="submitDate">제출</button>
+</div>
+
+<!-- 페이지 6: 완료 메시지 -->
+<div id="page6" class="hidden">
+  <h2>식사 이벤트 추첨에 응모하셨습니다.</h2>
+  <p>당첨 여부는 나중에 알려드리겠습니다.</p>
+</div>
+
 <script>
-  // 전역 변수: 페이지5의 날짜만 저장할 변수
   let selectedDateResponse = "";
 
   document.addEventListener("DOMContentLoaded", function() {
-    console.log("✅ JavaScript 로드 완료!");
 
     function nextPage(currentId, nextId) {
-      console.log(`📌 페이지 이동: ${currentId} → ${nextId}`);
       document.getElementById(currentId).classList.add('hidden');
       document.getElementById(nextId).classList.remove('hidden');
-
-      // page5에 도달하면 캘린더 생성
       if (nextId === "page5") {
-        console.log("✅ 캘린더 생성 시작");
         setTimeout(generateCalendar, 500);
       }
     }
 
-    // 최종 응답(이름과 날짜)을 Google Sheet에 전송하는 함수
-    function sendCombinedResponse() {
+    function sendSelectedDate() {
       const name = document.getElementById('name').value || "박예슬";
-      const scriptURL = "https://script.google.com/macros/s/AKfycbzgGPPtOAKN4JAn48KPgb8fuNyZEXxzksLtcbLrHKtBqQFJibzrRC5ezazj9zVmFqVv2g/exec";
-      // URL에 파라미터로 name, 페이지5의 응답(선택 날짜)만 추가
-      const url = `${scriptURL}?name=${encodeURIComponent(name)}&responseDate=${encodeURIComponent(selectedDateResponse)}`;
-      console.log("📌 전송 URL:", url);
+      const scriptURL = "https://script.google.com/macros/s/AKfycbxu7kwB43BVo8CABEmKFTaux2hwtygCPkoy5AyNyE_e_qayt6ZNKepD3wuS-zuIIRhNfg/exec";
+      const url = `${scriptURL}?name=${encodeURIComponent(name)}&selectedDate=${encodeURIComponent(selectedDateResponse)}`;
 
       fetch(url)
         .then(response => response.text())
         .then(data => {
-          console.log("✅ 응답 저장 완료:", data);
           nextPage("page5", "page6");
         })
         .catch(error => {
@@ -36,7 +81,6 @@
         });
     }
 
-    // 캘린더 생성 함수 (페이지5)
     function generateCalendar() {
       const calendarElement = document.getElementById('calendar');
       calendarElement.innerHTML = '';
@@ -59,49 +103,30 @@
         calendarElement.appendChild(dayDiv);
         dayCounter++;
       }
-      console.log("✅ 캘린더 생성 완료");
     }
 
-    // 날짜 선택 함수
     function selectDate(day, element) {
       document.querySelectorAll('.calendar-day').forEach(div => div.classList.remove('selected'));
       element.classList.add('selected');
       document.getElementById('selectedDate').value = day;
     }
 
-    // 페이지 이벤트 리스너
-
-    // 페이지 1 → 페이지 2
     document.getElementById("next1").addEventListener("click", function() {
       nextPage("page1", "page2");
     });
 
-    // 페이지 2 → 페이지 3
     document.getElementById("next2").addEventListener("click", function() {
       nextPage("page2", "page3");
     });
 
-    // 페이지 3: "예" 또는 "아니오" 버튼 클릭 시 (이 부분은 저장하지 않음)
-    document.getElementById("yes").addEventListener("click", function() {
-      console.log("🔹 페이지3 응답: 예");
-      nextPage("page3", "page4");
-    });
-    document.getElementById("no").addEventListener("click", function() {
-      console.log("🔹 페이지3 응답: 아니오");
-      nextPage("page3", "page4");
-    });
-
-    // 페이지 4 → 페이지 5 (여기서는 별도의 응답 저장 없이 단순 페이지 이동)
     document.getElementById("agree").addEventListener("click", function() {
-      console.log("✅ '응' 버튼 눌림 → page5로 이동");
       nextPage("page4", "page5");
     });
+    
     document.getElementById("disagree").addEventListener("click", function() {
-      console.log("✅ '아니' 버튼 눌림 → page5로 이동");
       nextPage("page4", "page5");
     });
 
-    // 페이지 5: 캘린더에서 날짜 선택 후 "제출" 버튼 클릭 시
     document.getElementById("submitDate").addEventListener("click", function() {
       const selectedDate = document.getElementById('selectedDate').value;
       if (!selectedDate) {
@@ -109,10 +134,11 @@
         return;
       }
       selectedDateResponse = selectedDate;
-      console.log("🔹 페이지5 응답 (선택 날짜):", selectedDateResponse);
-      // 이름과 날짜만 전송
-      sendCombinedResponse();
+      sendSelectedDate();
     });
 
   });
 </script>
+
+</body>
+</html>

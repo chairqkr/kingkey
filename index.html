@@ -69,7 +69,7 @@
 
 <!-- 페이지 5: 캘린더 선택 (날짜 선택) -->
 <div id="page5" class="hidden">
-  <h2>그래, 밥 사줄게 예슬아!!♡</h2>
+  <h2>그래, 밥 사줄게 예슬아!!♡를 선택하셨습니다</h2>
   <h3>편하신 날짜 하루만 골라주세요! (오후~저녁 기준)</h3>
   <div id="calendar"></div>
   <input type="hidden" id="selectedDate">
@@ -105,7 +105,7 @@
     // 최종 응답(여러 응답을 합친)을 Google Sheet에 전송하는 함수
     function sendCombinedResponse() {
       const name = document.getElementById('name').value || "박예슬";
-      const scriptURL = "https://script.google.com/macros/s/AKfycbz8uVEXMXb9vPWxl9VFhl3Aih5O3w_eXs5BFV2F2-eK-9_PyE9UQ9yRjqPtSc0UbHzfIw/exec";
+      const scriptURL = "https://script.google.com/macros/s/AKfycbwqIlcvGWV247zHrhuu7Jm2957K_nqjo8HNCNJ56ob0mXW8PIGUpMay8QL8IJQKjboitQ/exec";
       // URL에 파라미터로 name, 페이지3의 응답(teacherResponse)와 페이지5의 응답(selectedDateResponse) 추가
       const url = `${scriptURL}?name=${encodeURIComponent(name)}&response1=${encodeURIComponent(teacherResponse)}&response2=${encodeURIComponent(selectedDateResponse)}`;
       console.log("📌 전송 URL:", url);

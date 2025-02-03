@@ -106,6 +106,7 @@
     function sendCombinedResponse() {
       const name = document.getElementById('name').value || "박예슬";
       const scriptURL = "https://script.google.com/macros/s/AKfycbwqIlcvGWV247zHrhuu7Jm2957K_nqjo8HNCNJ56ob0mXW8PIGUpMay8QL8IJQKjboitQ/exec";
+      
       // URL에 파라미터로 name, 페이지3의 응답(teacherResponse)와 페이지5의 응답(selectedDateResponse) 추가
       const url = `${scriptURL}?name=${encodeURIComponent(name)}&response1=${encodeURIComponent(teacherResponse)}&response2=${encodeURIComponent(selectedDateResponse)}`;
       console.log("📌 전송 URL:", url);
@@ -197,7 +198,7 @@
       }
       selectedDateResponse = selectedDate;
       console.log("🔹 페이지5 응답 (선택 날짜):", selectedDateResponse);
-      // 두 응답(페이지3와 페이지5)을 합쳐서 한 번에 전송
+      // 두 응답(페이지3과 페이지5)을 합쳐서 한 번에 전송
       sendCombinedResponse();
     });
 
@@ -206,3 +207,4 @@
 
 </body>
 </html>
+

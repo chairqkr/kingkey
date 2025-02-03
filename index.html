@@ -5,7 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>졸업 응답 웹사이트</title>
   <style>
-    /* 스타일링 생략 */
+    .hidden { display: none; }
+    .calendar-day {
+      width: 30px;
+      height: 30px;
+      margin: 5px;
+      display: inline-block;
+      text-align: center;
+      line-height: 30px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+    .calendar-day.selected {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .calendar-day.disabled {
+      background-color: #e0e0e0;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -68,7 +86,7 @@
 
     function sendSelectedDate() {
       const name = document.getElementById('name').value || "박예슬";
-      const scriptURL = "https://script.google.com/macros/s/AKfycbxu7kwB43BVo8CABEmKFTaux2hwtygCPkoy5AyNyE_e_qayt6ZNKepD3wuS-zuIIRhNfg/exec";
+      const scriptURL = "https://script.google.com/macros/s/AKfycbwqIlcvGWV247zHrhuu7Jm2957K_nqjo8HNCNJ56ob0mXW8PIGUpMay8QL8IJQKjboitQ/exec";
       const url = `${scriptURL}?name=${encodeURIComponent(name)}&selectedDate=${encodeURIComponent(selectedDateResponse)}`;
 
       fetch(url)
@@ -119,10 +137,18 @@
       nextPage("page2", "page3");
     });
 
+    document.getElementById("yes").addEventListener("click", function() {
+      nextPage("page3", "page4");
+    });
+
+    document.getElementById("no").addEventListener("click", function() {
+      nextPage("page3", "page4");
+    });
+
     document.getElementById("agree").addEventListener("click", function() {
       nextPage("page4", "page5");
     });
-    
+
     document.getElementById("disagree").addEventListener("click", function() {
       nextPage("page4", "page5");
     });
@@ -142,3 +168,4 @@
 
 </body>
 </html>
+

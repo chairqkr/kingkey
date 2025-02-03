@@ -74,7 +74,6 @@
 <script>
   console.log("웹사이트 코드 시작!");
 
-
   let selectedDateResponse = "";
 
   document.addEventListener("DOMContentLoaded", function() {
@@ -88,9 +87,14 @@
     }
 
     function sendSelectedDate() {
-      // "이름"은 더 이상 보내지 않고 "날짜"만 보냄
-      const scriptURL = "https://script.google.com/macros/s/AKfycbxPCBrsPinVPKAxZoDSB_paXceORw7jDCEMUvZaRE-GIFfop5FQcPPEyj4oAnGnPG1BBQ/exec";
-      const url = `${scriptURL}?selectedDate=${encodeURIComponent(selectedDateResponse)}`;
+      const selectedDate = document.getElementById('selectedDate').value;
+      if (!selectedDate) {
+        alert("날짜를 선택해주세요!");
+        return;
+      }
+
+      const scriptURL = "https://script.google.com/macros/s/AKfycbwqIlcvGWV247zHrhuu7Jm2957K_nqjo8HNCNJ56ob0mXW8PIGUpMay8QL8IJQKjboitQ/exec";
+      const url = `${scriptURL}?selectedDate=${encodeURIComponent(selectedDate)}`;
 
       console.log("전송할 URL: ", url); // URL 확인
 
@@ -174,3 +178,4 @@
 
 </body>
 </html>
+
